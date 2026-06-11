@@ -1,0 +1,4 @@
+.shadow/
+.vscode/
+.DS_Store
+*.log
