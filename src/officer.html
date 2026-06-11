@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRUS - Officer Portal Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header style="background-color: #23272a;">
+        <h1>🛡️ GRUS: Internal Officer Dashboard</h1>
+        <p>Manage office availability status and citizen escalation logs</p>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>⚙️ Quick Status Broadcast</h2>
+            <p class="subtitle">Instantly update your office status across the mobile app, website, and IVR lines.</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="broadcastStatus('Active')" style="background-color: #28a745;">Mark Office: ACTIVE</button>
+                <button onclick="broadcastStatus('Closed')" style="background-color: #dc3545;">Mark Office: CLOSED</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>📥 Unresolved Citizen Queries Queue</h2>
+            <p class="subtitle">Incoming requests that need manual review and verification.</p>
+            <div id="officer-queue">
+                <p>Checking database for incoming queries...</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const BACKEND_URL = "https://your-backend-api-url.render.com/api/v1";
+
+        // Simulating the official status change broadcast
+        async function broadcastStatus(status) {
+            alert(`Broadcasting "${status}" status to App, Website, and Voice Bot channels!`);
+            // Real production link: fetch(`${BACKEND_URL}/update-status`, { method: 'POST', ... })
+        }
+
+        // Mock data loading for presentation purposes
+        window.onload = () => {
+            const queue = document.getElementById('officer-queue');
+            queue.innerHTML = `
+                <div class="qa-item" style="background: #fff8f8; padding: 15px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #dc3545;">
+                    <p><strong>👤 Citizen ID:</strong> +91 98765XXXXX (Via IVR Voice Line)</p>
+                    <p><strong>❓ Query:</strong> "Is the Bhimtal block office open today for ration registration?"</p>
+                    <textarea placeholder="Type official response here..." style="margin: 10px 0;"></textarea>
+                    <button onclick="alert('Answer verified and broadcasted to citizen!')" style="background-color: #23272a; padding: 5px 10px; font-size: 0.85rem;">Submit Resolution</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
