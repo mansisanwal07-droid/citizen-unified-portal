@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRUS - Citizen Unified Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>🏛️ GRUS: Citizen Service Portal</h1>
+        <p>Real-time updates and verified community information</p>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>📍 Live Office Availability</h2>
+            <p class="subtitle">Check if local public offices are active right now.</p>
+            <div id="office-list" class="grid-container">
+                <p class="loading">Loading live office statuses...</p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>💬 Verified Community Q&A</h2>
+            <p class="subtitle">Ask questions or view official, verified answers from officers.</p>
+           
+            <form id="qa-form">
+                <div class="form-group">
+                    <input type="text" id="phone-input" placeholder="Your Phone Number" required maxlength="15">
+                </div>
+                <div class="form-group">
+                    <textarea id="question-input" placeholder="Type your question here (e.g., What documents are needed for a new ration card?)" required></textarea>
+                </div>
+                <button type="submit">Submit Question</button>
+            </form>
+
+            <div id="qa-feed">
+                </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
