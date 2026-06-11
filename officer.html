@@ -55,8 +55,8 @@
 
     <main class="container">
         <section class="card">
-            <h2>⚙️ Quick Status Broadcast</h2>
-            <p class="subtitle">Instantly update your office status across channels.</p>
+            <h2>⚙️ Quick Status Broadcast (Bhimtal Tehsil Office)</h2>
+            <p class="subtitle">Instantly update your office status across application parameters.</p>
             <div style="display: flex; gap: 10px;">
                 <button onclick="broadcastStatus('Active')" style="background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Mark Office: ACTIVE</button>
                 <button onclick="broadcastStatus('Closed')" style="background-color: #dc3545; color: white; padding: 10px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Mark Office: CLOSED</button>
@@ -64,46 +64,85 @@
         </section>
 
         <section class="card">
-            <h2>📥 Unresolved Citizen Queries Queue</h2>
-            <p class="subtitle">Incoming requests that need manual review and verification.</p>
+            <h2>📥 Incoming Questions Registry Queue</h2>
+            <p class="subtitle">Review and provide authenticated resolutions to multiple citizen submissions.</p>
             <div id="officer-queue">
-                <p>Checking database for incoming queries...</p>
+                <p>Checking database registry rows...</p>
             </div>
         </section>
     </main>
 
     <script>
         function broadcastStatus(status) {
-            alert(`Broadcasting "${status}" status to App, Website, and Voice Bot channels!`);
+            localStorage.setItem('status_BhimtalTehsil', status);
+            alert(`Broadcasted: Bhimtal Tehsil Office status updated to "${status}" across systems!`);
         }
 
-        window.onload = () => {
+        // Generate the queue of all submitted questions requiring resolution
+        function loadQueue() {
             const queue = document.getElementById('officer-queue');
-            const liveQuery = localStorage.getItem('latestCitizenQuery');
+            if (!queue) return;
             
-            if (liveQuery) {
-                queue.innerHTML = `
-                    <div class="qa-item" style="background: #fff8f8; padding: 15px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #dc3545;">
-                        <p><strong>👤 Citizen Communication Log:</strong> Active Session</p>
-                        <p><strong>❓ Query:</strong> "${liveQuery}"</p>
-                        <textarea id="officer-response" placeholder="Type official response here..." style="margin: 10px 0; width:100%; height:60px; padding:8px; box-sizing:border-box; border-radius:4px; border:1px solid #ccc;"></textarea>
-                        <button onclick="submitResponse()" style="background-color: #23272a; padding: 6px 12px; font-size: 0.85rem; border-radius:4px; color:white; border:none; cursor:pointer;">Submit Resolution</button>
-                    </div>
-                `;
+            // Read index lists from shared global array structure
+            const existingQueries = JSON.parse(localStorage.getItem('grus_query_registry')) || [];
+            
+            // Filters out queries that have already been resolved to keep queue focused
+            const openTickets = existingQueries.filter(item => item.answer === null);
+            
+            if (openTickets.length > 0) {
+                queue.innerHTML = ''; // Flush placeholder logs
+                
+                openTickets.forEach(ticket => {
+                    queue.innerHTML += `
+                        <div class="qa-item" style="background: #fff8f8; padding: 15px; border-radius: 4px; margin-bottom: 12px; border-left: 4px solid #dc3545;">
+                            <p style="margin:0 0 5px 0; font-size:0.85rem; color:#666;"><strong>🎫 Ticket reference:</strong> GRUS-${ticket.id} | Customer contact token: ${ticket.phone}</p>
+                            <p style="margin:5px 0 10px 0;"><strong>❓ Query:</strong> "${ticket.text}"</p>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" id="response-text-${ticket.id}" placeholder="Type verified resolution response content here..." style="flex:1; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                                <button onclick="submitResponse(${ticket.id})" style="background-color: #23272a; padding: 8px 15px; font-size: 0.85rem; border-radius:4px; color:white; border:none; cursor:pointer; font-weight:bold;">Submit</button>
+                            </div>
+                        </div>
+                    `;
+                });
             } else {
                 queue.innerHTML = `
                     <div class="qa-item" style="background: #f8f9fa; padding: 15px; border-radius: 4px; border-left: 4px solid #ccc;">
-                        <p style="margin:0; color:#666;"><em>No active citizen queries in the queue. Try submitting one from the Citizen Portal tab!</em></p>
+                        <p style="margin:0; color:#666;"><em>🎉 Splendid! No unresolved citizen queries currently matching parameters in queue registry.</em></p>
                     </div>
                 `;
             }
         }
 
-        function submitResponse() {
-            alert('Answer verified and broadcasted to the citizen channel!');
-            localStorage.removeItem('latestCitizenQuery');
-            location.reload();
+        // Live Cross-Tab Intercept Handler to sync multiple typed inquiries instantly
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'grus_query_registry') {
+                loadQueue();
+            }
+        });
+
+        // Map and append responses back to corresponding element rows by referencing unique IDs
+        function submitResponse(ticketId) {
+            const inputField = document.getElementById(`response-text-${ticketId}`);
+            if (!inputField || inputField.value.trim() === "") {
+                alert("Please enter a response before submitting.");
+                return;
+            }
+
+            const existingQueries = JSON.parse(localStorage.getItem('grus_query_registry')) || [];
+            
+            // Find and match the target ticket array item row object
+            const targetTicket = existingQueries.find(item => item.id === ticketId);
+            if (targetTicket) {
+                targetTicket.answer = inputField.value.trim(); // Apply response string data
+            }
+
+            // Write modified changes back to the shared storage model layer
+            localStorage.setItem('grus_query_registry', JSON.stringify(existingQueries));
+            alert(`Resolution verified and broadcast to public citizen interface pipeline channel successfully!`);
+            loadQueue();
         }
+
+        window.onload = loadQueue;
     </script>
 </body>
 </html>
