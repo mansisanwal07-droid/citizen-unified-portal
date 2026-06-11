@@ -1,0 +1,16 @@
+{
+  "voice_bot_configuration": {
+    "telephony_provider": "Twilio API",
+    "translation_engine": "Bhashini AI Platform",
+    "supported_languages": ["en-IN", "hi-IN", "kumaoni-local", "garhwali-local"],
+    "webhook_routing": {
+      "incoming_call_trigger": "https://your-backend-api-url.render.com/api/v1/ivr/incoming",
+      "speech_to_text_fallback": "https://your-backend-api-url.render.com/api/v1/ivr/process-voice"
+    },
+    "automated_rules": {
+      "keyword_match_status": ["open", "active", "timing", "status"],
+      "action_on_match": "QUERY office_master TABLE",
+      "escalation_threshold": "If Confidence Score falls below 70%, set escalated=TRUE and alert Officer Dashboard"
+    }
+  }
+}
